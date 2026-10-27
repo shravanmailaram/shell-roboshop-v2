@@ -3,6 +3,7 @@
 user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/$0.log"
+scripts_dir=$(dirname "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -45,6 +46,26 @@ nodejs_setup(){
 
         npm install &>> $logs_file
         validate $? "Installing dependencies"
+}
+
+java_setup(){
+    dnf module enable maven:3.9 -y &>> $logs_file
+    dnf install maven java-25-openjdk-devel -y &>> $logs_file
+    validate $? "Installing Java and Maven"
+
+    alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java"
+    validate $? "Setting Java 25 as default version"
+
+    echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
+    source /etc/profile.d/java.sh
+    echo $JAVA_HOME 
+    validate $? "Setting JAVA_HOME for Maven"
+
+    mvn clean package &>> $logs_file
+    validate $? "Installing dependencies"
+
+    mv target/shipping.jar shipping.jar
+    validate $? "Moving shipping.jar file"
 }
 
 systemd_setup(){
