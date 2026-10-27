@@ -68,6 +68,17 @@ java_setup(){
     validate $? "Moving shipping.jar file"
 }
 
+python_setup(){
+    dnf install python3.14 python3.14-pip -y &>> $logs_file
+    validate $? "Installing Python 3.14"
+    
+    python3.14 -m venv /app/.venv &>> $logs_file
+    validate $? "Creating virtual environment"
+
+    /app/.venv/bin/pip install -r requirements.txt &>> $logs_file
+    validate $? "Installing dependencies"
+}
+
 systemd_setup(){
     sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/$app_name.service" 
     cp "$scripts_dir/$app_name.service" "/etc/systemd/system/$app_name.service"
