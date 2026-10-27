@@ -3,6 +3,7 @@
 user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/$0.log"
+domain_name="dopsaws.online"
 scripts_dir=$(dirname "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
@@ -71,7 +72,7 @@ java_setup(){
 python_setup(){
     dnf install python3.14 python3.14-pip -y &>> $logs_file
     validate $? "Installing Python 3.14"
-    
+
     python3.14 -m venv /app/.venv &>> $logs_file
     validate $? "Creating virtual environment"
 
