@@ -24,6 +24,6 @@ else
     echo -e "$(timestamp) [INFO] Products are already loaded...${Y}SKIPPING...${N}"
 fi
 
-restart()
+restart
 total_time
 
