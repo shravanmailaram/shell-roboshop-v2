@@ -21,6 +21,9 @@ fi
 mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql
 validate $? "Creating APP user"
 
+systemctl daemon-reload &>> $logs_file
+systemctl enable shipping &>> $logs_file
+
 systemd_setup
 
 restart
